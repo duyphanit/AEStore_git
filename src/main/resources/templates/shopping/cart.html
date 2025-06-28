@@ -1,0 +1,118 @@
+<!DOCTYPE html> <!--Cart_demo4-->
+<html xmlns="http://www.thymeleaf.org">
+
+<head>
+	<title>Giỏ hàng | AE Store</title>
+	<link rel="icon" th:href="@{/image/img_layout/logo.png}" type="image/png">
+
+	<!--Bootstrap-->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+	<!--CSS-->
+	<link rel="stylesheet" th:href="@{/css/index.css}" />
+	<link rel="stylesheet" th:href="@{/css/cart.css}" />
+	
+	<style>
+		table td {
+		    vertical-align: middle;
+		}
+	</style>
+</head>
+
+<body>
+	<div th:replace="layout/_header :: header"></div>
+	<div th:replace="layout/_nav :: nav"></div>
+
+	<!-- Nội dung -->
+	<div class="container p-5">
+		<h4 class="mb-4">Giỏ hàng của bạn</h4>
+		<!--Table-->
+		<div class="table-responsive">
+			<table class="table table-bordered align-middle text-center">
+				<thead class="table-light">
+					<tr>
+						<th>#</th>
+						<th>THÔNG TIN SẢN PHẨM</th>
+						<th>ĐƠN GIÁ</th>
+						<th>SỐ LƯỢNG</th>
+						<th>THÀNH TIỀN</th>
+						<th>HÀNH ĐỘNG</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="cart-item" th:each="item : ${cartItems}">
+						<td>
+							<input type="checkbox" class="item-check">
+						</td>
+						<td class="text-start d-flex align-items-center gap-3">
+							<img th:src="@{'/image/img_sanpham/' + ${item.product.images}}">
+							<div th:text="${item.product.productName}">Tên</div>
+						</td>
+						<td class="price"
+							th:text="|${#numbers.formatDecimal(item.product.firstPrice, 0, 'POINT', 0, 'POINT')} ₫|">Giá
+						</td>
+						<td>
+							<form th:action="@{/cart/update}" method="post" class="d-inline">
+								<input type="hidden" name="cartId" th:value="${item.cartID}" />
+								<div class="input-group input-group-sm" style="max-width: 140px;">
+									<button class="btn btn-outline-secondary btn-sm" type="submit" name="quantity"
+										th:value="${item.quantity - 1}">-</button>
+									<input type="text" class="form-control text-center form-control-sm"
+										th:value="${item.quantity}" readonly style="width: 40px;" />
+									<button class="btn btn-outline-secondary btn-sm" type="submit" name="quantity"
+										th:value="${item.quantity + 1}">+</button>
+								</div>
+							</form>
+						</td>
+						<td class="price text-danger item-total" th:attr="data-value=${item.quantity * item.product.firstPrice}"
+							th:text="|${#numbers.formatDecimal(item.quantity * item.product.firstPrice, 0, 'POINT', 0, 'POINT')} ₫|">
+						</td>
+
+						<td>
+							<form method="post" th:action="@{/cart/remove}">
+								<input type="hidden" name="productId" th:value="${item.product.productID}" />
+								<button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Xóa</button>
+							</form>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="d-flex justify-content-between align-items-center mt-4">
+			<a href="/home" class="btn btn-light border">TIẾP TỤC MUA HÀNG</a>
+			<div class="text-end">
+				<div class="mb-2 fw-bold">TỔNG TIỀN: <span class="item-total" id="total-money">0₫</span></div>
+				<a href="/pay"><button class="btn btn-dark px-5">THANH TOÁN</button></a>
+			</div>
+		</div>
+	</div>
+
+
+	<div th:replace="layout/_footer :: footer"></div>
+</body>
+
+<script>
+document.querySelectorAll('.item-check').forEach(checkbox => {
+    checkbox.addEventListener('change', updateTotal);
+});
+
+function updateTotal() {
+    let total = 0;
+    document.querySelectorAll('.item-check').forEach((cb, index) => {
+        if (cb.checked) {
+            const itemRow = cb.closest('tr');
+            const totalCell = itemRow.querySelector('.item-total');
+            const value = parseFloat(totalCell.getAttribute('data-value'));
+            total += value;
+        }
+    });
+
+    // Format tiền tệ có dấu chấm ngăn cách
+    const formatted = total.toLocaleString('vi-VN') + '₫';
+    document.getElementById('total-money').textContent = formatted;
+}
+</script>
+
+</html>
