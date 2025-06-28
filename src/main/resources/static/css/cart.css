@@ -1,0 +1,119 @@
+/* Tổng thể */
+.container-fluid.p-5 {
+	background: linear-gradient(to right, #f8fbff, #ecf0f1);
+	border-radius: 16px;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Tiêu đề */
+h4.mb-4 {
+	font-size: 2rem;
+	font-weight: 700;
+	color: #2d3436;
+	border-left: 5px solid #000000;
+	padding-left: 10px;
+	margin-bottom: 30px;
+}
+
+/* Dòng sản phẩm */
+.cart-item td {
+	vertical-align: middle;
+	background-color: #fdfefe;
+	transition: background 0.3s ease;
+}
+
+.cart-item:hover td {
+	background-color: #f0f8ff;
+}
+
+/* Hình ảnh sản phẩm */
+.cart-item img {
+	width: 90px;
+	height: 90px;
+	border-radius: 10px;
+	object-fit: cover;
+	border: 2px solid #dfe6e9;
+	transition: transform 0.3s ease;
+}
+
+.cart-item:hover img {
+	transform: scale(1.05);
+}
+
+/* Thông tin sản phẩm */
+.cart-item .text-start div:first-child {
+	font-weight: 600;
+	font-size: 1.05rem;
+}
+
+.cart-item .text-start a {
+	font-size: 0.85rem;
+	color: #d63031;
+	text-decoration: none;
+}
+
+.cart-item .text-start a:hover {
+	text-decoration: underline;
+}
+
+/* Giá tiền */
+.price {
+	font-weight: bold;
+	color: #2d3436;
+	font-size: 1.1rem;
+}
+
+/* Input số lượng */
+.cart-actions input {
+	max-width: 50px;
+	font-weight: bold;
+	border: 1px solid #b2bec3;
+}
+
+/* Nút tăng giảm */
+.cart-actions button {
+	font-weight: bold;
+	color: #2d3436;
+	border-color: #dfe6e9;
+}
+
+.cart-actions button:hover {
+	background-color: #0984e3;
+	color: #fff;
+}
+
+/* Nút tiếp tục mua */
+.btn-light.border {
+	font-weight: bold;
+	border-radius: 40px;
+	padding: 10px 25px;
+	background-color: #ffffff;
+	transition: all 0.3s ease;
+}
+
+.btn-light.border:hover {
+	background-color: #0984e3;
+	color: white;
+}
+
+/* Tổng tiền */
+.text-end .fw-bold {
+	font-size: 1.4rem;
+	color: #2c3e50;
+}
+
+/* Nút thanh toán */
+.btn-dark.px-5 {
+	background: linear-gradient(to right, #0984e3, #6c5ce7);
+	border: none;
+	font-size: 1.1rem;
+	font-weight: bold;
+	padding: 12px 40px;
+	border-radius: 50px;
+	transition: opacity 0.3s ease;
+}
+
+.btn-dark.px-5:hover {
+	opacity: 0.9;
+}
