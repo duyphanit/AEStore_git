@@ -1,4 +1,4 @@
-<!DOCTYPE html> <!--Cart_demo4-->
+<!DOCTYPE html>
 <html xmlns="http://www.thymeleaf.org">
 
 <head>
@@ -41,34 +41,32 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr class="cart-item" th:each="item : ${cartItems}">
+					<tr th:each="item, iterStat : ${cartItems}">
 						<td>
-							<input type="checkbox" class="item-check">
-						</td>
-						<td class="text-start d-flex align-items-center gap-3">
-							<img th:src="@{'/image/img_sanpham/' + ${item.product.images}}">
-							<div th:text="${item.product.productName}">Tên</div>
-						</td>
-						<td class="price"
-							th:text="|${#numbers.formatDecimal(item.product.firstPrice, 0, 'POINT', 0, 'POINT')} ₫|">Giá
+							<input type="checkbox" class="cart-checkbox" th:data-price="${item.product.firstPrice}" th:data-quantity="${item.quantity}" name="selectedCartIds" th:value="${item.cartID}" form="payForm" />
 						</td>
 						<td>
-							<form th:action="@{/cart/update}" method="post" class="d-inline">
+							<img th:src="@{'/image/img_sanpham/' + ${item.product.images}}"
+								 class="img-thumbnail d-block mx-auto"
+								 style="width: 120px; height: 120px; object-fit: contain;" />
+							<span th:text="${item.product.productName}"></span>
+						</td>
+						<td class="fw-bold" th:text="${#numbers.formatDecimal(item.product.firstPrice, 0, 'POINT', 0, 'COMMA')} + ' ₫'" ></td>
+						<td>
+							<!-- Form cập nhật số lượng, hoàn toàn tách biệt -->
+							<form method="post" th:action="@{/cart/update}" class="d-inline">
 								<input type="hidden" name="cartId" th:value="${item.cartID}" />
-								<div class="input-group input-group-sm" style="max-width: 140px;">
-									<button class="btn btn-outline-secondary btn-sm" type="submit" name="quantity"
-										th:value="${item.quantity - 1}">-</button>
-									<input type="text" class="form-control text-center form-control-sm"
-										th:value="${item.quantity}" readonly style="width: 40px;" />
-									<button class="btn btn-outline-secondary btn-sm" type="submit" name="quantity"
-										th:value="${item.quantity + 1}">+</button>
+								<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+								<div class="d-flex justify-content-center">
+									<div class="input-group input-group-sm" style="width: 120px;">
+										<button class="btn btn-outline-secondary" type="submit" name="quantity" th:value="${item.quantity - 1}" th:disabled="${item.quantity <= 1}">-</button>
+										<input type="text" class="form-control text-center" name="quantity" th:value="${item.quantity}" readonly>
+										<button class="btn btn-outline-secondary" type="submit" name="quantity" th:value="${item.quantity + 1}">+</button>
+									</div>
 								</div>
 							</form>
 						</td>
-						<td class="price text-danger item-total" th:attr="data-value=${item.quantity * item.product.firstPrice}"
-							th:text="|${#numbers.formatDecimal(item.quantity * item.product.firstPrice, 0, 'POINT', 0, 'POINT')} ₫|">
-						</td>
-
+						<td class="fw-bold text-danger" th:text="${#numbers.formatDecimal(item.product.firstPrice * item.quantity, 0, 'POINT', 0, 'COMMA')} + ' ₫'" ></td>
 						<td>
 							<form method="post" th:action="@{/cart/remove}">
 								<input type="hidden" name="productId" th:value="${item.product.productID}" />
@@ -78,41 +76,38 @@
 					</tr>
 				</tbody>
 			</table>
-		</div>
-
-		<div class="d-flex justify-content-between align-items-center mt-4">
-			<a href="/home" class="btn btn-light border">TIẾP TỤC MUA HÀNG</a>
-			<div class="text-end">
-				<div class="mb-2 fw-bold">TỔNG TIỀN: <span class="item-total" id="total-money">0₫</span></div>
-				<a href="/pay"><button class="btn btn-dark px-5">THANH TOÁN</button></a>
-			</div>
+			<!-- Form lớn ở ngoài bảng, chỉ để thanh toán -->
+			<form method="post" action="/pay" id="payForm">
+				<div class="d-flex justify-content-between align-items-center mt-4">
+					<a href="/home" class="btn btn-light border">TIẾP TỤC MUA HÀNG</a>
+					<div class="mb-2 fw-bold">TỔNG TIỀN: <span id="total-amount" style="color: red;">0 ₫</span></div>
+					<button type="submit" class="btn btn-dark px-5">THANH TOÁN</button>
+				</div>
+			</form>
 		</div>
 	</div>
-
 
 	<div th:replace="layout/_footer :: footer"></div>
 </body>
 
 <script>
-document.querySelectorAll('.item-check').forEach(checkbox => {
-    checkbox.addEventListener('change', updateTotal);
-});
+document.addEventListener('DOMContentLoaded', function() {
+    function updateTotal() {
+        let total = 0;
+        document.querySelectorAll('.cart-checkbox:checked').forEach(function(checkbox) {
+            const price = parseFloat(checkbox.getAttribute('data-price'));
+            const quantity = parseInt(checkbox.getAttribute('data-quantity'));
+            total += price * quantity;
+        });
+        // Định dạng số tiền kiểu Việt Nam
+        const formatted = total.toLocaleString('vi-VN') + ' ₫';
+        document.getElementById('total-amount').textContent = formatted;
+    }
 
-function updateTotal() {
-    let total = 0;
-    document.querySelectorAll('.item-check').forEach((cb, index) => {
-        if (cb.checked) {
-            const itemRow = cb.closest('tr');
-            const totalCell = itemRow.querySelector('.item-total');
-            const value = parseFloat(totalCell.getAttribute('data-value'));
-            total += value;
-        }
+    document.querySelectorAll('.cart-checkbox').forEach(function(checkbox) {
+        checkbox.addEventListener('change', updateTotal);
     });
-
-    // Format tiền tệ có dấu chấm ngăn cách
-    const formatted = total.toLocaleString('vi-VN') + '₫';
-    document.getElementById('total-money').textContent = formatted;
-}
+});
 </script>
 
 </html>
