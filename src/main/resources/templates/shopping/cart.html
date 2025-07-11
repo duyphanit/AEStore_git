@@ -56,7 +56,6 @@
 							<!-- Form cập nhật số lượng, hoàn toàn tách biệt -->
 							<form method="post" th:action="@{/cart/update}" class="d-inline">
 								<input type="hidden" name="cartId" th:value="${item.cartID}" />
-								<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 								<div class="d-flex justify-content-center">
 									<div class="input-group input-group-sm" style="width: 120px;">
 										<button class="btn btn-outline-secondary" type="submit" name="quantity" th:value="${item.quantity - 1}" th:disabled="${item.quantity <= 1}">-</button>
