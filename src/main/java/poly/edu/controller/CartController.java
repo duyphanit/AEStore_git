@@ -48,6 +48,14 @@ public class CartController {
 
         List<Cart> cartItems = cartDAO.findByAccount_Email(email);
         model.addAttribute("cartItems", cartItems);
+
+        // Tính tổng tiền
+        double total = 0;
+        for (Cart cart : cartItems) {
+            total += cart.getQuantity() * cart.getProduct().getFirstPrice();
+        }
+        model.addAttribute("total", total);
+
         return "shopping/cart";
     }
     
@@ -62,7 +70,7 @@ public class CartController {
         Product product = productDAO.findById(productId).orElse(null);
 
         if (account != null && product != null) {
-        	Optional<Cart> existingCart = cartDAO.findByAccount_AccountIDAndProduct_ProductID(account.getAccountID(), productId);
+            Optional<Cart> existingCart = cartDAO.findByAccount_IdAndProduct_ProductID(account.getId(), product.getProductID());
             if (existingCart.isPresent()) {
                 Cart cart = existingCart.get();
                 cart.setQuantity(cart.getQuantity() + 1);
@@ -76,8 +84,7 @@ public class CartController {
                 cartDAO.save(newCart);
             }
         }
-//        return "redirect:/cart";
-        return "redirect:/home";
+        return "redirect:/cart";
     }
 
 
@@ -99,10 +106,10 @@ public class CartController {
     public String remove(@RequestParam("productId") Long productId, HttpSession session) {
         String email = (String) session.getAttribute("email");
         if (email == null)
-        	return "redirect:/account/login";
+            return "redirect:/account/login";
         Account account = accountDAO.findByEmail(email).stream().findFirst().orElse(null);
         if (account != null) {
-        	cartDAO.deleteByAccount_AccountIDAndProduct_ProductID(account.getAccountID(), productId);
+            cartDAO.deleteByAccount_IdAndProduct_ProductID(account.getId(), productId);
         }
         return "redirect:/cart";
     }
