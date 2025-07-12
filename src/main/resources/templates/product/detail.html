@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết sản phẩm | AE Store</title>
+    <link rel="icon" th:href="@{/image/img_layout/logo.png}" type="image/png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/index.css}" />
+</head>
+<body>
+
+<div th:replace="layout/_header :: header"></div>
+<div th:replace="layout/_nav :: nav"></div>
+
+<section class="container-fluid bg-light py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Hình ảnh -->
+            <div class="col-md-6 text-center">
+                <img th:src="@{'/image/img_sanpham/' + ${product.images}}" class="img-fluid rounded shadow-sm" th:alt="${product.productName}">
+            </div>
+
+            <!-- Thông tin sản phẩm -->
+            <div class="col-md-6 mt-4 mt-md-0">
+                <h3 class="fw-bold" th:text="${product.productName}">Tên sản phẩm</h3>
+                <p class="text-muted mb-2">
+                    Thương hiệu: <strong th:text="${product.category.category_Name}">Thương hiệu</strong> &nbsp; | &nbsp; 
+                    Trạng Thái SP: <strong>còn hàng</strong>
+                </p>
+
+                <div class="my-3">
+                    <div class="price-sale" th:text="|${#numbers.formatDecimal(product.firstPrice, 0, 'POINT', 0, 'POINT')} ₫|">Giá</div>
+                </div>
+
+                <div class="input-group mb-4" style="max-width: 160px;">
+                    <button class="btn btn-outline-secondary" type="button" onclick="changeQuantity(-1)">−</button>
+                    <input type="text" class="form-control text-center" value="1" id="quantity">
+                    <button class="btn btn-outline-secondary" type="button" onclick="changeQuantity(1)">+</button>
+                </div>
+
+                <div class="d-flex gap-3 mb-4">
+                    <form th:action="@{/cart/add}" method="post" class="d-inline">
+                        <input type="hidden" name="productId" th:value="${product.productID}" />
+                        <input type="hidden" name="quantity" id="quantityInput" value="1" />
+                        <button type="submit" class="btn btn-success px-4 py-2 rounded-3 shadow">
+                            <i class="bi bi-cart-check"></i> MUA NGAY
+                        </button>
+                    </form>
+                    <form th:action="@{/cart/add}" method="post" class="d-inline">
+                        <input type="hidden" name="productId" th:value="${product.productID}" />
+                        <input type="hidden" name="quantity" id="quantityInput2" value="1" />
+                        <button type="submit" class="btn btn-outline-dark px-4 py-2 rounded-3 shadow">
+                            <i class="bi bi-patch-plus-fill"></i> THÊM VÀO GIỎ
+                        </button>
+                    </form>
+                </div>
+
+                <h6 class="fw-semibold mb-2">Phương thức thanh toán</h6>
+                <div class="payment-icons mb-4">
+                    <img src="/image/img_layout/payment_1.png" alt="Visa">
+                    <img src="/image/img_layout/payment_2.png" alt="Mastercard">
+                    <img src="/image/img_layout/payment_3.png" alt="JCB">
+                    <img src="/image/img_layout/payment_4.png" alt="VNPAY">
+                    <img src="/image/img_layout/payment_5.png" alt="MoMo">
+                </div>
+
+                <div class="row benefits text-muted">
+                    <div class="col-sm-6 mb-2"><i class="bi bi-truck"></i> Giao hàng toàn quốc</div>
+                    <div class="col-sm-6 mb-2"><i class="bi bi-gift"></i> Tích điểm mọi sản phẩm</div>
+                    <div class="col-sm-6 mb-2"><i class="bi bi-truck-flatbed"></i> Miễn phí ship đơn từ 500k</div>
+                    <div class="col-sm-6 mb-2"><i class="bi bi-patch-check"></i> Cam kết chính hãng 100%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div th:replace="layout/_footer :: footer"></div>
+
+<script>
+function changeQuantity(change) {
+    const quantityInput = document.getElementById('quantity');
+    const quantityInput1 = document.getElementById('quantityInput');
+    const quantityInput2 = document.getElementById('quantityInput2');
+    
+    let currentQuantity = parseInt(quantityInput.value);
+    let newQuantity = currentQuantity + change;
+    
+    if (newQuantity < 1) {
+        newQuantity = 1;
+    }
+    
+    quantityInput.value = newQuantity;
+    quantityInput1.value = newQuantity;
+    quantityInput2.value = newQuantity;
+}
+</script>
+
+</body>
+</html>
