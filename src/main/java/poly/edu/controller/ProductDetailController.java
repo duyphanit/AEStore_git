@@ -24,10 +24,5 @@ public class ProductDetailController {
         model.addAttribute("product", product);
         return "product/detail";
     }
-
-    @GetMapping("/product/detail")
-    public String showDetailStaticPage() {
-        return "product/detail"; 
-    }
 }
 
