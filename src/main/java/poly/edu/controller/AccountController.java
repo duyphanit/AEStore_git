@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import poly.edu.dao.AccountDAO;
 import poly.edu.entity.Account;
+import poly.edu.service.AccountService;
 
 @Controller
 @RequestMapping("/account")
@@ -25,6 +27,9 @@ public class AccountController {
 
 	@Autowired
 	private AccountDAO accountDAO;
+	
+	@Autowired
+	private AccountService accountService;
 
 	@GetMapping("/login")
 	public String LoginForm() {
@@ -138,4 +143,34 @@ public class AccountController {
 		model.addAttribute("name", name);
 		return "index_layout";
 	}
+	
+	// Profile
+		@GetMapping("/profile")
+		public String showProfile(Model model, HttpSession session) {
+			String email = (String) session.getAttribute("email");
+			if (email == null) {
+				return "redirect:/account/login";
+			}
+
+			Account account = accountService.getByEmail(email);
+			model.addAttribute("account", account);
+			return "account/profile";
+		}
+		
+		@PostMapping("/profile/update")
+		public String updateProfile(@ModelAttribute("account") Account formAccount, HttpSession session,
+				RedirectAttributes ra) {
+			String email = (String) session.getAttribute("email");
+			Account acc = accountService.getByEmail(email);
+			
+			//Update
+			acc.setEmail(formAccount.getEmail());
+			acc.setFullname(formAccount.getFullname());
+			acc.setPhone(formAccount.getPhone());
+			acc.setAddress(formAccount.getAddress());
+			
+			accountService.save(acc);
+			ra.addFlashAttribute("message", "Cập nhật thành công!");
+			return "redirect:/account/profile";
+		}
 }

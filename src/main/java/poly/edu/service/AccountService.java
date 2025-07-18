@@ -16,19 +16,29 @@ public class AccountService {
 	public List<Account> findAll() {
 		return accountDAO.findAll();
 	}
-	
+
 	public Account save(Account acc) {
 		return accountDAO.save(acc);
 	}
-	
+
 	public Account findById(Long id) {
 		return accountDAO.findById(id).orElse(null);
 	}
-	
+
 	public void deleteById(Long id) {
 		accountDAO.deleteById(id);
-	} 
+	}
+
 	public Account findByEmail(String email) {
-	    return accountDAO.findByEmail(email).orElse(null);
+		return accountDAO.findByEmail(email).orElse(null);
+	}
+
+	// Profile
+	public Account getByEmail(String email) {
+		return accountDAO.findByEmail(email).orElse(null);
+	}
+
+	public void updateProfile(Account updateAccount) {
+		accountDAO.save(updateAccount);
 	}
 }

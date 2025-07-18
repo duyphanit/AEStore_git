@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Trang cá nhân | AE Store</title>
+	<link rel="icon" th:href="@{/image/img_layout/logo.png}" type="image/png">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	<link rel="stylesheet" th:href="@{/css/index.css}" />
+</head>
+
+<body>
+
+	<div th:replace="layout/_header :: header"></div>
+	<div th:replace="layout/_nav :: nav"></div>
+
+	<div class="container mt-4">
+		<div class="row">
+			<div class="col-md-8">
+				<!-- Tab buttons -->
+				<ul class="nav nav-tabs mb-3" id="profileTab" role="tablist">
+					<li class="nav-item" role="presentation">
+						<button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile"
+							type="button" role="tab" aria-controls="profile" aria-selected="true">
+							<i class="bi bi-person"></i> TRANG CÁ NHÂN
+						</button>
+					</li>
+					<li class="nav-item" role="presentation">
+						<button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history"
+							type="button" role="tab" aria-controls="history" aria-selected="false">
+							<i class="bi bi-clock-history"></i> LỊCH SỬ ĐẶT HÀNG
+						</button>
+					</li>
+				</ul>
+				<!-- Tab content -->
+				<div class="tab-content" id="profileTabContent">
+					<div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+						<div class="d-flex justify-content-between align-items-center mb-3">
+							<h4>THÔNG TIN CÁ NHÂN</h4>
+							<a href="#" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal"
+								data-bs-target="#editProfileModal">
+								<i class="bi bi-pencil-square"></i> Chỉnh sửa thông tin
+							</a>
+						</div>
+
+						<table class="table">
+							<tbody>
+								<tr>
+									<th scope="row">Họ Tên</th>
+									<td th:text="${account.fullname}">Phan Nhựt Duy</td>
+								</tr>
+								<tr>
+									<th scope="row">Email</th>
+									<td th:text="${account.email}">duypnps38998@gmail.com</td>
+								</tr>
+								<tr>
+									<th scope="row">Phone</th>
+									<td th:text="${account.phone}">0368688374</td>
+								</tr>
+								<tr>
+									<th scope="row">Địa chỉ</th>
+									<td th:text="${account.address}">New York, USA</td>
+								</tr>
+								<tr>
+									<th scope="row">Role</th>
+									<td th:text="${account.role ? 'Admin' : 'User'}">Admin</td>
+								</tr>
+							</tbody>
+						</table>
+						
+						<span th:text="${message}" class="text-danger fw-bold"></span>
+					</div>
+
+					<div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
+						<h4 class="mt-2">Lịch sử mua hàng</h4>
+						<table class="table text-center">
+							<thead>
+								<tr>
+									<th>Ngày mua</th>
+									<th>Sản phẩm</th>
+									<th>Số lượng</th>
+									<th>Tổng tiền</th>
+									<th>Trạng thái</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>01/07/2025</td>
+									<td>Áo thun AE</td>
+									<td>2</td>
+									<td>400,000₫</td>
+									<td><span class="badge bg-success">Đã giao</span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal Edit Profile -->
+	<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<form class="modal-content" th:action="@{/account/profile/update}" method="post" th:object="${account}">
+				<div class="modal-header">
+					<h5 class="modal-title" id="editProfileModalLabel">Chỉnh sửa thông tin cá nhân</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="mb-3">
+						<label for="fullName" class="form-label">Họ tên</label>
+						<input type="text" class="form-control" id="fullname" th:field="*{fullname}">
+					</div>
+					<div class="mb-3">
+						<label for="email" class="form-label">Email</label>
+						<input type="email" class="form-control" id="email" th:field="*{email}">
+					</div>
+					<div class="mb-3">
+						<label for="phone" class="form-label">Số điện thoại</label>
+						<input type="text" class="form-control" id="phone" th:field="*{phone}">
+					</div>
+					<div class="mb-3">
+						<label for="location" class="form-label">Địa chỉ</label>
+						<input type="text" class="form-control" id="address" th:field="*{address}">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+					<button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<div th:replace="layout/_footer :: footer"></div>
+</body>
+
+</html>
