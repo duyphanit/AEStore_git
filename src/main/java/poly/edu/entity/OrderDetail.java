@@ -2,6 +2,10 @@ package poly.edu.entity;
 
 import java.io.Serializable;
 
+<<<<<<< HEAD
+=======
+import jakarta.persistence.Column;
+>>>>>>> 01796f7 (uppdate Order_history)
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
@@ -26,9 +30,18 @@ public class OrderDetail implements Serializable {
 	private Long orderID;
 
 	@Id
+<<<<<<< HEAD
 	private Long productID;
 
 	private Integer quantity;
+=======
+	@Column(name = "Product_ID")
+	private Long productID;
+
+	private Integer quantity;
+	
+	@Column(name = "Last_Price")
+>>>>>>> 01796f7 (uppdate Order_history)
 	private Double lastPrice;
 	private Double total;
 
@@ -37,6 +50,10 @@ public class OrderDetail implements Serializable {
 	private Orders order;
 
 	@ManyToOne
+<<<<<<< HEAD
 	@JoinColumn(name = "productID", insertable = false, updatable = false)
+=======
+	@JoinColumn(name = "Product_ID", insertable = false, updatable = false)
+>>>>>>> 01796f7 (uppdate Order_history)
 	private Product product;
 }

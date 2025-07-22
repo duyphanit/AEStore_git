@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
+<<<<<<< HEAD
+=======
+import jakarta.persistence.Column;
+>>>>>>> 01796f7 (uppdate Order_history)
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,11 +26,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Orders implements Serializable{
+<<<<<<< HEAD
 	
+=======
+>>>>>>> 01796f7 (uppdate Order_history)
 	private static final long serialVersionUID = 1L;
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+<<<<<<< HEAD
     private Long orderID;
 
     private LocalDate date;
@@ -35,6 +43,22 @@ public class Orders implements Serializable{
 
     @ManyToOne
     @JoinColumn(name = "accountID")
+=======
+	@Column(name = "OrderID")
+    private Long orderID;
+
+	@Column(name = "Date")
+    private LocalDate date;
+    
+	@Column(name = "Status")
+    private String status;
+	
+	@Column(name = "SumTotal")
+    private Double sumTotal;
+
+    @ManyToOne
+    @JoinColumn(name = "AccountID")
+>>>>>>> 01796f7 (uppdate Order_history)
     private Account account;
 
     @OneToMany(mappedBy = "order")

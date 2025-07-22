@@ -18,6 +18,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import poly.edu.dao.AccountDAO;
+<<<<<<< HEAD
+=======
+import poly.edu.dao.OrdersDAO;
+>>>>>>> 01796f7 (uppdate Order_history)
 import poly.edu.entity.Account;
 import poly.edu.service.AccountService;
 
@@ -30,6 +34,12 @@ public class AccountController {
 	
 	@Autowired
 	private AccountService accountService;
+<<<<<<< HEAD
+=======
+	
+	@Autowired
+	private OrdersDAO ordersDAO;
+>>>>>>> 01796f7 (uppdate Order_history)
 
 	@GetMapping("/login")
 	public String LoginForm() {
@@ -154,6 +164,11 @@ public class AccountController {
 
 			Account account = accountService.getByEmail(email);
 			model.addAttribute("account", account);
+<<<<<<< HEAD
+=======
+			// Truyền danh sách đơn hàng đúng theo AccountID
+	 		model.addAttribute("orders", ordersDAO.findByAccount_Id(account.getId()));
+>>>>>>> 01796f7 (uppdate Order_history)
 			return "account/profile";
 		}
 		

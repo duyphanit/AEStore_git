@@ -11,6 +11,7 @@
 </head>
 
 <body>
+<<<<<<< HEAD
 
 	<div th:replace="layout/_header :: header"></div>
 	<div th:replace="layout/_nav :: nav"></div>
@@ -94,12 +95,126 @@
 								</tr>
 							</tbody>
 						</table>
+=======
+	<div th:replace="layout/_header :: header"></div>
+	<div th:replace="layout/_nav :: nav"></div>
+
+	<div class="container py-5">
+		<!-- Tabs -->
+		<ul class="nav nav-tabs mb-4 justify-content-center" id="profileTab" role="tablist">
+			<li class="nav-item" role="presentation">
+				<button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button"
+					role="tab">Thông Tin Cá Nhân</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" id="orders-tab" data-bs-toggle="tab" data-bs-target="#orders" type="button"
+					role="tab">Lịch Sử Mua Hàng</button>
+			</li>
+		</ul>
+
+		<div class="tab-content" id="profileTabContent">
+			<!-- Profile Tab -->
+			<div class="tab-pane fade show active" id="info" role="tabpanel">
+				<!-- Thông báo thành công -->
+				<div th:if="${message}" id="success-alert" class="alert alert-success text-center fw-bold" th:text="${message}"></div>
+				<script>
+				    setTimeout(function() {
+				        var alert = document.getElementById('success-alert');
+				        if(alert) alert.style.display = 'none';
+				    }, 5000);
+				</script>
+				<div class="row">
+					<div class="col-md-4">
+						<div class="position-relative text-center p-4 bg-white rounded-4 shadow-lg border border-2 border-primary-subtle">
+							<div class="position-relative d-inline-block mb-3">
+								<span class="position-absolute top-50 start-50 translate-middle bg-primary bg-opacity-25 rounded-circle" style="width:120px;height:120px;z-index:0;"></span>
+								<i class="bi bi-person-circle text-primary" style="font-size: 100px; position:relative; z-index:1;"></i>
+							</div>
+							<h5 class="mb-1 fw-bold" th:text="${account.fullname}">Nguyễn Văn A</h5>
+							<ul class="list-unstyled text-start mt-3">
+								<li class="mb-2"><i class="bi bi-envelope-at me-2 text-primary"></i><span th:text="${account.email}">tuanphps39290@gmail.com</span></li>
+								<li><i class="bi bi-person-badge me-2 text-primary"></i><span th:text="${account.role ? 'Admin' : 'Khách hàng'}">Khách hàng</span></li>
+							</ul>
+							<div class="d-flex justify-content-center gap-2 mt-3">
+								<a class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editProfileModal"><i class="bi bi-pencil"></i> Sửa</a>
+								<a class="btn btn-outline-danger btn-sm"><i class="bi bi-box-arrow-right"></i> Đăng xuất</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-8">
+						<div class="card p-4 shadow-sm rounded-4 bg-white bg-opacity-75">
+							<h5>Thông tin chi tiết</h5>
+							<table class="table table-borderless mb-0">
+								<tr>
+									<th>Họ tên</th>
+									<td th:text="${account.fullname}">Nguyễn Văn A</td>
+								</tr>
+								<tr>
+									<th>Email</th>
+									<td th:text="${account.email}">email@example.com</td>
+								</tr>
+								<tr>
+									<th>SĐT</th>
+									<td th:text="${account.phone}">0123456789</td>
+								</tr>
+								<tr>
+									<th>Địa chỉ</th>
+									<td th:text="${account.address}">Hà Nội, Việt Nam</td>
+								</tr>
+								<tr>
+									<th>Vai trò</th>
+									<td th:text="${account.role ? 'Admin' : 'Khách hàng'}">Khách hàng</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Orders Tab -->
+			<div class="tab-pane fade" id="orders" role="tabpanel">
+				<div class="card shadow-lg rounded-4 border-0 mt-4">
+					<div class="card-body">
+						<h4 class="mb-4 fw-bold"><i class="bi bi-clock-history me-2 text-primary"></i>Lịch sử mua hàng</h4>
+						<div class="table-responsive">
+							<table class="table align-middle table-hover table-bordered rounded-4 overflow-hidden">
+								<thead class="table-light">
+									<tr>
+										<th class="text-center"><i class="bi bi-calendar-event"></i> Ngày mua</th>
+										<th class="text-center"><i class="bi bi-box-seam"></i> Sản phẩm</th>
+										<th class="text-center">Số lượng</th>
+										<th class="text-center"><i class="bi bi-cash-coin"></i> Tổng tiền</th>
+										<th class="text-center"><i class="bi bi-info-circle"></i> Trạng thái</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:if="${orders == null or #lists.isEmpty(orders)}">
+										<td colspan="5" class="text-center text-muted py-4">
+											<i class="bi bi-emoji-frown fs-3 me-2"></i> Bạn chưa có đơn hàng nào.
+										</td>
+									</tr>
+									<tr th:each="order : ${orders}">
+										<td class="text-center" th:text="${order.date}"></td>
+										<td class="text-center" th:text="${order.orderDetails[0].product.productName}"></td>
+										<td class="text-center" th:text="${order.orderDetails[0].quantity}"></td>
+										<td class="text-center fw-bold text-success" th:text="${#numbers.formatDecimal(order.sumTotal, 0, 'POINT', 0, 'POINT')} + '₫'"></td>
+										<td class="text-center">
+											<span th:classappend="${order.status} == 'Đã giao hàng' ? 'badge bg-success' : (order.status == 'Đang giao hàng' ? 'badge bg-warning text-dark' : 'badge bg-secondary')"
+												class="badge px-3 py-2 fs-6"
+												th:text="${order.status}"></span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+>>>>>>> 01796f7 (uppdate Order_history)
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 
+<<<<<<< HEAD
 	<!-- Modal Edit Profile -->
 	<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel"
 		aria-hidden="true">
@@ -112,6 +227,19 @@
 				<div class="modal-body">
 					<div class="mb-3">
 						<label for="fullName" class="form-label">Họ tên</label>
+=======
+	<!-- Modal chỉnh sửa -->
+	<div class="modal fade" id="editProfileModal" tabindex="-1">
+		<div class="modal-dialog">
+			<form class="modal-content" method="post" th:action="@{/account/profile/update}" th:object="${account}">
+				<div class="modal-header">
+					<h5 class="modal-title">Chỉnh sửa thông tin cá nhân</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+				<div class="modal-body">
+					<div class="mb-3">
+						<label for="fullname" class="form-label">Họ tên</label>
+>>>>>>> 01796f7 (uppdate Order_history)
 						<input type="text" class="form-control" id="fullname" th:field="*{fullname}">
 					</div>
 					<div class="mb-3">
@@ -123,18 +251,30 @@
 						<input type="text" class="form-control" id="phone" th:field="*{phone}">
 					</div>
 					<div class="mb-3">
+<<<<<<< HEAD
 						<label for="location" class="form-label">Địa chỉ</label>
+=======
+						<label for="address" class="form-label">Địa chỉ</label>
+>>>>>>> 01796f7 (uppdate Order_history)
 						<input type="text" class="form-control" id="address" th:field="*{address}">
 					</div>
 				</div>
 				<div class="modal-footer">
+<<<<<<< HEAD
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
 					<button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+=======
+					<button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+>>>>>>> 01796f7 (uppdate Order_history)
 				</div>
 			</form>
 		</div>
 	</div>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 01796f7 (uppdate Order_history)
 	<div th:replace="layout/_footer :: footer"></div>
 </body>
 
