@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import poly.edu.dao.CategoryDAO;
 import poly.edu.dao.ProductDAO;
@@ -16,13 +18,21 @@ public class ProductService {
 	private ProductDAO productDAO;
 	@Autowired
 	private CategoryDAO categoryDAO;
+	public long getTotalProducts() {
+	    return productDAO.count();
+	}
+
 
 	public List<Product> findAll() {
 		return productDAO.findAll();
 	}
 	
-	public List<Product> findByCategoryId(Long CategoryId){
-		return productDAO.findByCategory_Id(CategoryId);
+	public Page<Product> findByCategoryId(Long categoryId, Pageable pageable) {
+		return productDAO.findByCategory_Id(categoryId, pageable);
+	}
+
+	public Page<Product> findAll(Pageable pageable) {
+		return productDAO.findAll(pageable);
 	}
 
 	public List<Category> findAllCategories() {
