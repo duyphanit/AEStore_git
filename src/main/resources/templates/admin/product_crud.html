@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Quản lý sản phẩm | AE Store</title>
+	<link rel="stylesheet"
+		href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+	<link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
+	<link rel="stylesheet" href="/css/adminlte.min.css">
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css">
+</head>
+
+<div class="preloader flex-column justify-content-center align-items-center">
+	<img class="animation__shake" src="/image/img_layout/logo.png" alt="AdminLTELogo" height="60" width="60">
+</div>
+
+<body class="hold-transition sidebar-mini">
+
+	<div class="wrapper">
+		<!-- Navbar -->
+		<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+			<!-- Left navbar links -->
+			<ul class="navbar-nav">
+				<li class="nav-item">
+					<a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+				</li>
+				<li class="nav-item d-none d-sm-inline-block">
+					<a href="/home" class="nav-link">Home</a>
+				</li>
+				<li class="nav-item d-none d-sm-inline-block">
+					<a href="#" class="nav-link">Contact</a>
+				</li>
+			</ul>
+
+			<!-- Right navbar links -->
+			<ul class="navbar-nav ml-auto">
+				<!-- Navbar Search -->
+				<li class="nav-item">
+					<a class="nav-link" data-widget="navbar-search" href="#" role="button">
+						<i class="fas fa-search"></i>
+					</a>
+					<div class="navbar-search-block">
+						<form class="form-inline">
+							<div class="input-group input-group-sm">
+								<input class="form-control form-control-navbar" type="search" placeholder="Search"
+									aria-label="Search">
+								<div class="input-group-append">
+									<button class="btn btn-navbar" type="submit">
+										<i class="fas fa-search"></i>
+									</button>
+									<button class="btn btn-navbar" type="button" data-widget="navbar-search">
+										<i class="fas fa-times"></i>
+									</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</li>
+
+				<!-- Messages Dropdown Menu -->
+				<!-- Notifications Dropdown Menu -->
+				<!-- CHUÔNG THÔNG BÁO ĐƠN HÀNG MỚI -->
+				<li class="nav-item dropdown">
+					<a class="nav-link" data-toggle="dropdown" href="#">
+						<i class="far fa-bell"></i>
+						<span class="badge badge-danger navbar-badge" id="orderNotifyCount"
+							style="display: none;">0</span>
+					</a>
+					<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+						<span class="dropdown-item dropdown-header">Thông báo</span>
+						<div id="notificationList">
+							<span class="dropdown-item text-muted">Đang tải...</span>
+						</div>
+						<div class="dropdown-divider"></div>
+						<a href="/admin/notifications" class="dropdown-item dropdown-footer">Xem tất cả</a>
+					</div>
+				</li>
+				<!--aaaaaaaaaaaaaaaaaaaaa-->
+				<li class="nav-item">
+					<a class="nav-link" data-widget="fullscreen" href="#" role="button">
+						<i class="fas fa-expand-arrows-alt"></i>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
+						<i class="fas fa-th-large"></i>
+					</a>
+				</li>
+			</ul>
+		</nav>
+
+		<!-- Sidebar -->
+		<aside class="main-sidebar sidebar-dark-primary elevation-4">
+			<a href="/home" class="brand-link">
+				<img src="/image/img_layout/logo_white.png" class="brand-image img-circle elevation-3"
+					style="opacity: 2">
+				<span class="brand-text font-weight-light">AE Store</span>
+			</a>
+			<div class="sidebar">
+				<div class="user-panel mt-3 pb-3 mb-3 d-flex">
+					<div class="image">
+						<img src="/image/user2-160x160.jpg" class="img-circle elevation-2">
+					</div>
+					<div class="info">
+						<a href="#" class="d-block"><span th:text="${session.fullname}"></span></a>
+					</div>
+				</div>
+				<nav class="mt-2">
+					<ul class="nav nav-pills nav-sidebar flex-column">
+						<li class="nav-item">
+							<a href="/admin/mainadmin" class="nav-link">
+								<i class="fas fa-truck nav-icon"></i>
+								<p>Quản lý trang web</p>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a href="/admin/accounts" class="nav-link">
+								<i class="fas fa-users nav-icon"></i>
+								<p>Quản lý tài khoản</p>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a href="/admin/products" class="nav-link active">
+								<i class="fas fa-box nav-icon"></i>
+								<p>Quản lý sản phẩm</p>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a href="/admin/orders" class="nav-link">
+								<i class="fas fa-truck nav-icon"></i>
+								<p>Trạng thái giao hàng</p>
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</aside>
+
+		<!-- Content -->
+		<div class="content-wrapper pt-4 px-4">
+			<!-- Alert -->
+			<div th:if="${message}"
+				th:class="'alert alert-' + (${alertType} ?: 'info') + ' alert-dismissible fade show'" role="alert">
+				<i class="fas fa-info-circle"></i>
+				<span th:text="${message}">Thông báo</span>
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			</div>
+
+			<!-- Form -->
+			<div class="card mb-4">
+				<div class="card-header bg-primary text-white">
+					<h3 class="card-title">📝 Thêm / Cập nhật sản phẩm</h3>
+				</div>
+				<div class="card-body">
+					<form th:action="@{/admin/products/save}" method="post" enctype="multipart/form-data"
+						th:object="${product}">
+						<input type="hidden" th:field="*{productID}" />
+						<div class="form-row">
+							<div class="form-group col-md-6">
+								<label>Tên sản phẩm</label>
+								<input type="text" th:field="*{productName}" class="form-control"
+									placeholder="Nhập tên sản phẩm" required />
+							</div>
+							<div class="form-group col-md-6">
+								<label>Giá</label>
+								<input type="number" th:field="*{firstPrice}" class="form-control"
+									placeholder="Nhập giá..." required />
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="form-group col-md-6">
+								<label>Loại sản phẩm</label>
+								<select th:field="*{category.id}" class="form-control" required>
+									<option value="" disabled selected>-- Chọn loại --</option>
+									<option th:each="cat : ${categories}" th:value="${cat.id}"
+										th:text="${cat.categoryName}" th:selected="${cat.id == product.category?.id}">
+									</option>
+								</select>
+							</div>
+							<div class="form-group col-md-6">
+								<label>Ảnh</label>
+								<input type="file" name="imageFile" class="form-control" accept="image/*"
+									id="imageFileInput">
+								<div class="image-preview-wrapper mt-2">
+									<img id="previewImageNew" style="max-height: 100px; display:none;"
+										alt="Ảnh mới chọn" />
+									<span id="btnClearImage" title="Xóa ảnh">&times;</span>
+								</div>
+								<div th:if="${product.images != null}">
+									<label>Ảnh hiện tại:</label><br />
+									<img th:src="@{'/image/img_sanpham/' + ${product.images}}" alt="Ảnh hiện tại"
+										style="max-height: 100px;">
+								</div>
+							</div>
+						</div>
+						<div class="text-right">
+							<button type="submit" class="btn btn-success">
+								<i class="fas fa-save"></i> Lưu sản phẩm
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<!-- Table -->
+			<div class="card">
+				<div class="card-header">
+					<h3 class="card-title">Danh sách sản phẩm</h3>
+				</div>
+				<div class="card-body">
+					<table id="productTable" class="table table-bordered table-hover">
+						<thead class="text-center">
+							<tr>
+								<th>ID</th>
+								<th>Tên sản phẩm</th>
+								<th>Giá</th>
+								<th>Loại</th>
+								<th>Ảnh</th>
+								<th>Thao tác</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="pro : ${products}" class="text-center align-middle">
+								<td th:text="${pro.productID}"></td>
+								<td th:text="${pro.productName}"></td>
+								<td th:text="|${#numbers.formatDecimal(pro.firstPrice, 0, 'POINT', 0, 'POINT')} ₫|">
+								</td>
+								<td th:text="${pro.category.categoryName}"></td>
+								<td><img th:src="@{'/image/img_sanpham/' + ${pro.images}}" style="max-height: 50px;">
+								</td>
+								<td>
+									<a th:href="@{/admin/products/edit/{id}(id=${pro.productID})}"
+										class="btn btn-warning btn-sm" title="Sửa">
+										<i class="fas fa-edit"></i>
+									</a>
+									<a href="javascript:void(0);"
+									   class="btn btn-danger btn-sm"
+									   title="Xoá"
+									   th:attr="data-id=${pro.productID}, data-name=${pro.productName}"
+									   onclick="confirmDelete(this)">
+									   <i class="fas fa-trash-alt"></i>
+									</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+</body>
+
+<!-- Footer -->
+<footer class="main-footer">
+	<div class="float-right d-none d-sm-inline">Hệ thống quản trị</div>
+	<strong>&copy; 2025 <a href="#">AE Store</a>.</strong> All rights reserved.
+</footer>
+</div>
+
+<!-- Scripts -->
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  function confirmDelete(element) {
+    const id = element.getAttribute('data-id');
+    const name = element.getAttribute('data-name');
+    Swal.fire({
+      title: 'Bạn có chắc chắn?',
+      html: `🗑️ Bạn muốn xóa <strong>"${name}"</strong>?<br>Hành động này không thể hoàn tác.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Xóa',
+      cancelButtonText: 'Hủy'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = '/admin/products/delete/' + id;
+      }
+    });
+  }
+</script>
+
+<script src="/plugins/jquery/jquery.min.js"></script>
+<script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/js/adminlte.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
+
+<script>
+	$(document).ready(function () {
+		$('#productTable').DataTable({
+			responsive: true,
+			lengthChange: true,
+			pageLength: 5,
+			autoWidth: false,
+			ordering: true,
+			language: {
+				search: "🔍 Tìm kiếm:",
+				zeroRecords: "Không tìm thấy kết quả phù hợp",
+				lengthMenu: "Hiển thị _MENU_ dòng",
+				info: "Trang _PAGE_ / _PAGES_",
+				infoEmpty: "Không có dữ liệu",
+				paginate: {
+					previous: "Trước",
+					next: "Sau"
+				}
+			}
+		});
+	});
+
+	const imageInput = document.getElementById('imageFileInput');
+	const previewNew = document.getElementById('previewImageNew');
+	const btnClearImage = document.getElementById('btnClearImage');
+
+	imageInput.addEventListener('change', function () {
+		if (this.files && this.files[0]) {
+			const reader = new FileReader();
+			reader.onload = function (e) {
+				previewNew.src = e.target.result;
+				previewNew.style.display = 'inline-block';
+				btnClearImage.style.display = 'inline-block';
+			};
+			reader.readAsDataURL(this.files[0]);
+		} else {
+			previewNew.style.display = 'none';
+			btnClearImage.style.display = 'none';
+			previewNew.src = '';
+		}
+	});
+
+	btnClearImage.addEventListener('click', function () {
+		imageInput.value = '';
+		previewNew.style.display = 'none';
+		btnClearImage.style.display = 'none';
+	});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
+<script>
+	function loadNotifications() {
+		fetch('/admin/notifications/api/unread')
+			.then(res => res.json())
+			.then(data => {
+				const list = document.getElementById('notificationList');
+				const badge = document.getElementById('orderNotifyCount');
+				list.innerHTML = '';
+
+				const count = data.length;
+
+				if (count === 0) {
+					list.innerHTML = '<span class="dropdown-item text-muted">Không có thông báo</span>';
+					badge.style.display = 'none';
+					return;
+				}
+
+				badge.innerText = count;
+				badge.style.display = 'inline-block';
+
+				const item = document.createElement('a');
+				item.href = "#";
+				item.className = "dropdown-item font-weight-bold";
+				item.innerHTML = `<i class="fas fa-box text-warning mr-2"></i> Có (${count}) đơn hàng mới cần xác nhận`;
+				item.onclick = (e) => {
+					e.preventDefault();
+					fetch('/admin/notifications/mark-all-read', {
+						method: 'POST'
+					}).then(() => {
+						window.location.href = "/admin/orders";
+					});
+				};
+				list.appendChild(item);
+			});
+	}
+
+
+
+	function markAsRead(id) {
+		fetch(`/admin/notifications/mark-read/${id}`, {method: 'POST'})
+			.then(() => loadNotifications());
+	}
+
+	const socket = new SockJS('/ws');
+	const stompClient = Stomp.over(socket);
+	stompClient.connect({}, () => {
+		stompClient.subscribe('/topic/admin', function (message) {
+			loadNotifications();
+		});
+	});
+
+	document.addEventListener('DOMContentLoaded', loadNotifications);
+</script>
+<!-- (Tuỳ chọn) Dòng chữ realtime -->
+<span id="order-notification" style="display:none; color:red; font-weight:bold;"></span>
+
+</body>
+
+</html>
